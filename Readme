@@ -1,0 +1,11 @@
+Para criar e popular a base de dados do projeto sigam os seguintes passos:
+
+1. Instalem a extensão do VS Code para SQL: SQLTools
+
+1. Corram no terminal "docker-compose up --build"
+
+2. Criem a base de dados executando o código de sql em init.sql (se já tiverem o SQLTools basta clicarem em "Run on active connection")
+
+3. Executem o ficheiro generateData.py para criar os ficheiros csv para popular a base de dados
+
+4. Populem a base de dados executando o código de sql em populate.sql

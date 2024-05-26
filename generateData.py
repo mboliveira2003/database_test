@@ -1,5 +1,6 @@
 import random
 import string
+import os
 
 # Seed fixada para garantir que os dados são sempre os mesmos.
 random.seed(0)
@@ -475,6 +476,11 @@ def generateObservacoes():
 
 # Função principal que chama todas as funções de geração de dados.
 if __name__ == '__main__':
+
+    # Create the directory csv_files if it does not exist
+    if not os.path.exists('./csv_files'):
+        os.makedirs('./csv_files')
+
     generateClinicas()
     generateEnfermeiros()
     generateMedicos()
@@ -483,3 +489,4 @@ if __name__ == '__main__':
     generateConsultas()
     generateReceitas()
     generateObservacoes()
+

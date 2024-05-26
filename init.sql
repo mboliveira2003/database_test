@@ -1,22 +1,12 @@
-/*Drop all Tables*/
-DROP TABLE IF EXISTS clinica CASCADE;
-DROP TABLE IF EXISTS enfermeiro CASCADE;
-DROP TABLE IF EXISTS medico CASCADE;
-DROP TABLE IF EXISTS trabalha CASCADE;
-DROP TABLE IF EXISTS paciente CASCADE;
-DROP TABLE IF EXISTS receita CASCADE;
-DROP TABLE IF EXISTS consulta CASCADE;
-DROP TABLE IF EXISTS observacao CASCADE;
-
 /*Create Table Clínica*/
-CREATE TABLE clinica(
+CREATE TABLE IF NOT EXISTS clinica(
 nome VARCHAR(80) PRIMARY KEY,
 telefone VARCHAR(15) UNIQUE NOT NULL CHECK (telefone ~ '^[0-9]+$'),
 morada VARCHAR(255) UNIQUE NOT NULL
 );
 
 /*Create Table Enfermeiro*/
-CREATE TABLE enfermeiro(
+CREATE TABLE IF NOT EXISTS enfermeiro(
 nif CHAR(9) PRIMARY KEY CHECK (nif ~ '^[0-9]+$'),
 nome VARCHAR(80) UNIQUE NOT NULL,
 telefone VARCHAR(15) NOT NULL CHECK (telefone ~ '^[0-9]+$'),
@@ -25,7 +15,7 @@ nome_clinica VARCHAR(80) NOT NULL REFERENCES clinica (nome)
 );
 
 /*Create Table Médico*/
-CREATE TABLE medico(
+CREATE TABLE IF NOT EXISTS medico(
 nif CHAR(9) PRIMARY KEY CHECK (nif ~ '^[0-9]+$'),
 nome VARCHAR(80) UNIQUE NOT NULL,
 telefone VARCHAR(15) NOT NULL CHECK (telefone ~ '^[0-9]+$'),
@@ -34,7 +24,7 @@ especialidade VARCHAR(80) NOT NULL
 );
 
 /*Create Table Trabalha*/
-CREATE TABLE trabalha(
+CREATE TABLE IF NOT EXISTS trabalha(
 nif CHAR(9) NOT NULL REFERENCES medico,
 nome VARCHAR(80) NOT NULL REFERENCES clinica,
 dia_da_semana SMALLINT,
@@ -42,7 +32,7 @@ PRIMARY KEY (nif, dia_da_semana)
 );
 
 /*Create Table Paciente*/
-CREATE TABLE paciente(
+CREATE TABLE IF NOT EXISTS paciente(
 ssn CHAR(11) PRIMARY KEY CHECK (ssn ~ '^[0-9]+$'),
 nif CHAR(9) UNIQUE NOT NULL CHECK (nif ~ '^[0-9]+$'),
 nome VARCHAR(80) NOT NULL,
@@ -52,7 +42,7 @@ data_nasc DATE NOT NULL
 );
 
 /*Create Table Consulta*/
-CREATE TABLE consulta(
+CREATE TABLE IF NOT EXISTS consulta(
 id SERIAL PRIMARY KEY,
 ssn CHAR(11) NOT NULL REFERENCES paciente,
 nif CHAR(9) NOT NULL REFERENCES medico,
@@ -72,7 +62,7 @@ CHECK (
 );
 
 /*Create Table Receita*/
-CREATE TABLE receita(
+CREATE TABLE IF NOT EXISTS receita(
 codigo_sns VARCHAR(12) NOT NULL REFERENCES consulta (codigo_sns),
 medicamento VARCHAR(155) NOT NULL,
 quantidade SMALLINT NOT NULL CHECK (quantidade > 0),
@@ -80,7 +70,7 @@ PRIMARY KEY (codigo_sns, medicamento)
 );
 
 /*Create Table Observação*/
-CREATE TABLE observacao(
+CREATE TABLE IF NOT EXISTS observacao(
 id INTEGER NOT NULL REFERENCES consulta,
 parametro VARCHAR(155) NOT NULL,
 valor FLOAT,
@@ -104,7 +94,7 @@ $$
 LANGUAGE plpgsql;
 
 /*Create the TRIGGER*/
-CREATE TRIGGER check_medico_consulta_self
+CREATE OR REPLACE TRIGGER check_medico_consulta_self
 BEFORE INSERT ON consulta
 FOR EACH ROW
 EXECUTE FUNCTION check_medico_consulta_self_func();

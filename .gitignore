@@ -1,3 +1,6 @@
 
+# Ignore all files in data directory
+/data/*
 /data
-/data
+/data/base
+/csv_files
