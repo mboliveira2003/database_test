@@ -9,6 +9,7 @@ services:
       POSTGRES_DB: database
     volumes:
       - ./data:/var/lib/postgresql/data
+      - ./csv_files:/csv_files # Mount your CSV file directory
     ports:
       - 5432:5432
 
