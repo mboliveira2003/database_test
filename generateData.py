@@ -216,8 +216,29 @@ def zellers_congruence(day, month, year):
 # Guarda a tabela criada num ficheiro csv.
 def generateConsultas():
     consulta_pointer = 0
-    for year in range(2023, 2026):
+    # Popular as consutas para 2023
+    for year in range(2023, 2024):
         for month in range(1, 13):
+            for day in range(1, 29):
+                # Zeller's Congruence: fórmula para calcular o dia da semana (de 0 a 6) de uma data
+                day_of_week = zellers_congruence(day, month, year)
+                for clinica in clinicas:
+                        # Ir à tabela trabalha ver quais os médicos que trabalham na clínica clinica no dia da semana i
+                        medicos_available = [t.nif for t in trabalha if t.nome == clinica.nome and t.diaSemana == day_of_week]
+                        for medico_nif in medicos_available:
+                            for hour in range(8, 19):
+                                for minute in range(0, 60, 30):
+                                    if hour <= 12 or hour >= 14:
+                                        ssn = pacientes[consulta_pointer%5000].ssn
+                                        # Calcula uma distribuição binomial para decidir se a consulta tem receita médica associada
+                                        if random.random() < 0.8:
+                                            consultas.append(Consulta(str(consulta_pointer), ssn, medico_nif, clinica.nome, f"{year:04d}-{month:02d}-{day:02d}", f"{hour:02d}:{minute:02d}:00", ''.join(random.choices(string.digits, k=12))))
+                                        else:
+                                            consultas.append(Consulta(str(consulta_pointer), ssn, medico_nif, clinica.nome, f"{year:04d}-{month:02d}-{day:02d}", f"{hour:02d}:{minute:02d}:00", "null"))
+                                        consulta_pointer += 1
+    # Popular as consutas até meio de 2024
+    for year in range(2024, 2025):
+        for month in range(1, 6):
             for day in range(1, 29):
                 # Zeller's Congruence: fórmula para calcular o dia da semana (de 0 a 6) de uma data
                 day_of_week = zellers_congruence(day, month, year)

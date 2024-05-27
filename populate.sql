@@ -22,6 +22,6 @@ COPY receita FROM '/csv_files/receitas.csv' DELIMITER ',' CSV;
 -- Populate table observacao with data in csv file observacoes.csv
 COPY observacao FROM '/csv_files/observacoes.csv' DELIMITER ',' CSV NULL AS 'null';
 
--- Select all data from table clinica
-SELECT * FROM clinica;
+
+
 

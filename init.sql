@@ -55,7 +55,7 @@ UNIQUE(nif, data, hora),
 
 /*Implement integrity restriction for the time of the consultation -> RI-1*/
 CHECK (
-        (EXTRACT(HOUR FROM hora) BETWEEN 8 AND 12 OR EXTRACT(HOUR FROM hora) BETWEEN 14 AND 19)
+        (EXTRACT(HOUR FROM hora) BETWEEN 8 AND 12 OR EXTRACT(HOUR FROM hora) BETWEEN 14 AND 18)
         AND
         ((EXTRACT(HOUR FROM hora) * 60 + EXTRACT(MINUTE FROM hora)) % 30 = 0)
     )
@@ -120,6 +120,8 @@ CREATE OR REPLACE TRIGGER check_medico_in_clinica
 BEFORE INSERT ON consulta
 FOR EACH ROW
 EXECUTE FUNCTION check_medico_in_clinica_func();
+
+
 
 
 
