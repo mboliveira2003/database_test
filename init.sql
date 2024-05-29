@@ -123,8 +123,3 @@ EXECUTE FUNCTION check_medico_in_clinica_func();
 
 
 
-
-
-
-
-

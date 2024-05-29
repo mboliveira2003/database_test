@@ -5,6 +5,7 @@ from psycopg2 import connect, Error
 from psycopg2.extras import NamedTupleCursor
 from datetime import datetime, timedelta
 
+
 # Database URL
 DB = os.environ.get('DATABASE_URL', "postgres://username:password@localhost:5432/database")
 
@@ -62,29 +63,29 @@ def get_doctors_by_clinic_and_specialty(clinica, especialidade):
     with connect(DB) as conn:
         with conn.cursor(cursor_factory=NamedTupleCursor) as cur:
             try:
+                
                 # Verify if the clinic exists in the database
                 cur.execute("SELECT 1 FROM clinica WHERE nome = %s", (clinica,))
                 if not cur.fetchone():
                     return jsonify({"status": "error", "message": f"A {clinica} nao existe."}), 404
-                
-                # Verify if the specialty is offered by the clinic
-                cur.execute("SELECT 1 FROM medico JOIN trabalha ON medico.nif = trabalha.nif WHERE trabalha.nome = %s AND medico.especialidade = %s", (clinica, especialidade))
-                if not cur.fetchone():
-                    return jsonify({"status": "error", "message": f"A especialidade {especialidade} nao existe."}), 404
-                
+
                 # Join tables doctor and work by doctor's nif.
                 # Then return the name and nif of the doctors that work in the provided clinic and have the provided specialty.
                 cur.execute("SELECT medico.nome, medico.nif FROM medico JOIN trabalha ON medico.nif = trabalha.nif WHERE trabalha.nome = %s AND medico.especialidade = %s", (clinica, especialidade))
                 doctors = cur.fetchall()
 
+                # If there are no doctors with the provided specialty in the clinic, return an error message
+                if not doctors:
+                    return jsonify({"status": "error", "message": f"Nao existem medicos com a especialidade {especialidade} na {clinica}."}), 404
+
                 # List to store the response
                 response = []
-
+            
                 # For each computed doctor, find the first 3 available dates and times for an appointment
                 for doctor in doctors:
                     # List to store the available appointments
                     available_appointments = []
-
+                    
                     # Start from the current date and time.
                     current_time = datetime.now()
 
@@ -92,7 +93,6 @@ def get_doctors_by_clinic_and_specialty(clinica, especialidade):
                     first_possible_time = datetime(current_time.year, current_time.month, current_time.day, current_time.hour + 2 if current_time.hour <= 21 else current_time.hour, 0)
 
                     while len(available_appointments) < 3:
-
                         # Check if the time is between 8:00 and 13:00 or between 14:00 and 19:00
                         if  8 <= first_possible_time.hour < 13 or 14 <= first_possible_time.hour < 19:
 
@@ -133,7 +133,6 @@ def get_doctors_by_clinic_and_specialty(clinica, especialidade):
             except Error as e:
                 return jsonify({"status": "error", "message": "Não foi possível executar o pedido: " + e.pgerror}), 400
                     
-
 @app.route('/a/<clinica>/registar/', methods=['POST'])
 def register_appointment(clinica):
     """ #### Registers a new appointment in the database.
@@ -342,6 +341,7 @@ def cancel_appointment(clinica):
                 except psycopg2.Error as e:
                     conn.rollback()
                     return jsonify({"status": "error", "message": e.pgerror}), 400
+
 
 if __name__ == "__main__":
     print(app.url_map)
