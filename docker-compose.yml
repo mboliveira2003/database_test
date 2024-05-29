@@ -20,3 +20,9 @@ services:
       - 5000:5000  # Expose the port on which your Flask app runs
     depends_on:
       - db  # Ensure that the Flask app service depends on the database service
+    environment:
+      DATABASE_URL: postgresql://username:password@db:5432/database
+      FLASK_ENV: development
+    volumes:
+      - ./flask_app:/app
+

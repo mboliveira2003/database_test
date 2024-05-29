@@ -2,10 +2,10 @@
 FROM python:3.8-slim
 
 # Set the working directory in the container to /app
-WORKDIR /app
+WORKDIR /app    
 
-# Copy the current directory (our Flask app) into the container at /app
-COPY . /app
+# Copy the requirements.txt into the container at /app
+COPY requirements.txt /app/
 
 # Install Flask and other dependencies
 RUN pip install --no-cache-dir -r requirements.txt

@@ -466,7 +466,8 @@ parametros_quantitativos = [
     "Bilirrubina total (mg/dL)",
     "Enzimas hepaticas (AST/ALT U/L)",
     "Taxa de respiracao (respiracoes por minuto)",
-    "Circunferencia abdominal (cm)"
+    "Circunferencia abdominal (cm)",
+    "pressao diastolica"
 ]
 
 # Objeto para registar as observações criadas

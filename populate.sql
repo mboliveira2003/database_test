@@ -1,3 +1,6 @@
+-- Populate the tables with the data from the csv files
+BEGIN;
+
 -- Populate table clinica with data in csv file clinicas.csv
 COPY clinica FROM '/csv_files/clinicas.csv' DELIMITER ',' CSV;
 
@@ -21,6 +24,9 @@ COPY receita FROM '/csv_files/receitas.csv' DELIMITER ',' CSV;
 
 -- Populate table observacao with data in csv file observacoes.csv
 COPY observacao FROM '/csv_files/observacoes.csv' DELIMITER ',' CSV NULL AS 'null';
+
+END;
+
 
 
 
