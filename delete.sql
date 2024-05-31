@@ -26,3 +26,6 @@ DELETE FROM enfermeiro;
 DELETE FROM clinica;
 
 END;
+
+
+
